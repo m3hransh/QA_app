@@ -6,6 +6,7 @@ def connect_db():
     cur_dir = os.path.dirname(os.path.abspath(__name__))
     db_path = os.path.join(cur_dir,'questions.db')
     g.sqlite_db = sqlite3.connect(db_path)
+    g.sqlite_db.row_factory =sqlite3.Row
     return g.sqlite_db
 
 def get_db():

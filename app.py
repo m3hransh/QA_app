@@ -41,7 +41,7 @@ def login():
         usr_result = cur.fetchone()
         if check_password_hash(usr_result['password'], password):
             session['user'] = usr_result['name']
-            return '<h1> your password is correct</h1>'
+            return  redirect(url_for('index'))
         else:
             return '<h1>your password is incorrect</h1>'
 
@@ -56,7 +56,7 @@ def register():
         db = get_db()
         db.execute('insert into users (name, password, expert, admin) values(?, ?, ?, ?)', [request.form['name'], hash_pass, '0', '0'])
         db.commit()
-        return 'User created'
+        return redirect(url_for('index'))
     return render_template('register.html', user=user)
 
 @app.route('/ask')
@@ -85,14 +85,24 @@ def unanswered():
 
 @app.route('/users')
 def users():
+    db = get_db()
+    users_cur = db.execute('select id, name, expert from users ')
+    users_result = users_cur.fetchall()
     user = get_current_user()
 
-    return render_template('users.html', user=user)
+    return render_template('users.html', user=user, users_result = users_result)
 
 @app.route('/logout')
 def logout():
     session.pop('user', None)
     return redirect(url_for('index'))
+
+@app.route('/promote/<user_id>')
+def promote(user_id):
+    db = get_db()
+    db.execute('update users set expert=1 where id=?',[user_id])
+    db.commit()
+    return redirect(url_for('users'))
 
 if __name__=='__main__':
     app.run(debug=True)

@@ -59,11 +59,21 @@ def register():
         return redirect(url_for('index'))
     return render_template('register.html', user=user)
 
-@app.route('/ask')
+@app.route('/ask', methods=['POST', 'GET'])
 def ask():
     user = get_current_user()
+    db = get_db()
 
-    return render_template('ask.html', user=user)
+    if request.method =='POST':
+        db.execute('insert into questions (question_text, asked_by_id, expert_id) values(?, ?, ?)',\
+                     [request.form['question'], user['id'], request.form['expert']])
+        db.commit()
+
+        return redirect(url_for('index'))
+    
+    exper_cur = db.execute('select id, name from users where expert = 1')
+    expert_result = exper_cur.fetchall()
+    return render_template('ask.html', user=user, experts=expert_result)
 
 @app.route('/answer')
 def answer():

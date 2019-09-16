@@ -1,6 +1,15 @@
 {% extends "base.html" %}
+{% from 'show_links.html' import show_links %}
+
+{% block title %}
+Questions
+{% endblock title %}
+
+{% block nav %}
+{{show_links(user)}}
+{% endblock nav %}
+
 {% block content %}
-    <div class="container theme-showcase" role="main">
 
       <div class="jumbotron">
         <h1>What?</h1>
@@ -9,5 +18,4 @@
         <p><a class="btn btn-primary btn-lg">Answered By: Anthony</a></p>
       </div>
 
-    </div> <!-- /container -->
 {% endblock %}

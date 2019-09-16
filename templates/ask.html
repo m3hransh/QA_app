@@ -1,6 +1,14 @@
 {% extends "base.html"%}
+{% from 'show_links.html' import show_links %}
+{% block title %}
+Ask
+{% endblock title %}
+
+{% block nav %}
+{{show_links(user)}}
+{% endblock nav %}
+
 {% block content %}
-    <div class="container theme-showcase" role="main">
 
       <div class="page-header">
         <h1>Ask A Question</h1>
@@ -39,5 +47,4 @@
           </div>
         </div>
       </div>
-    </div> <!-- /container -->
     {% endblock %}

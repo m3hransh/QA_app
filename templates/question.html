@@ -12,10 +12,10 @@ Questions
 {% block content %}
 
       <div class="jumbotron">
-        <h1>What?</h1>
-        <p>This is the answer.</p>
-        <p><a class="btn btn-primary btn-lg">Asked By: Herbert</a></p>
-        <p><a class="btn btn-primary btn-lg">Answered By: Anthony</a></p>
+        <h1>{{ question['question_text'] }}</h1>
+        <p>{{ question['answer_text'] }}</p>
+        <p><a class="btn btn-primary btn-lg">Asked By:{{ question['asker_name'] }}</a></p>
+        <p><a class="btn btn-primary btn-lg">Answered By:{{ question['expert_name'] }}</a></p>
       </div>
 
 {% endblock %}

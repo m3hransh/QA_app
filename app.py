@@ -25,8 +25,13 @@ def close_db(error):
 @app.route('/')
 def index():
     user = get_current_user()
-    
-    return render_template('home.html', user=user)
+    db = get_db()
+    question_cur = db.execute('''select questions.id as question_id, questions.question_text, asker.name as asker_name, expert.name as expert_name
+                                 from questions join users as asker on questions.asked_by_id = asker.id
+                                  join users as expert on questions.expert_id = expert.id 
+                                  where questions.answer_text is not null ''') 
+    question_result = question_cur.fetchall()
+    return render_template('home.html', user=user, questions=question_result)
 
 @app.route('/login', methods=['Get', 'Post'])
 def login():
@@ -88,13 +93,19 @@ def answer(question_id):
     question_result = question_cur.fetchone()
     return render_template('answer.html', user=user, question=question_result)
 
-@app.route('/question')
-def question():
+@app.route('/question/<question_id>')
+def question(question_id):
     user = get_current_user()
+    db = get_db()
 
+    question_cur = db.execute('''select questions.answer_text, questions.question_text, questions.answer_text,
+                                asker.name as asker_name, expert.name as expert_name
+                                from questions join users as asker on questions.asked_by_id = asker.id
+                                join users as expert on questions.expert_id = expert.id 
+                                where questions.id = ?''', [question_id])
+    question_result = question_cur.fetchone()
     
-    
-    return render_template('question.html', user=user)
+    return render_template('question.html', user=user, question=question_result)
 
 @app.route('/unanswered')
 def unanswered():

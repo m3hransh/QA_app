@@ -37,6 +37,8 @@ def index():
 def login():
     user = get_current_user()
 
+    error = None
+
     if request.method == 'POST':
         db = get_db()
         name = request.form['name']
@@ -44,13 +46,17 @@ def login():
 
         cur = db.execute('select id, name, password from users where name=?', [name])
         usr_result = cur.fetchone()
-        if check_password_hash(usr_result['password'], password):
-            session['user'] = usr_result['name']
-            return  redirect(url_for('index'))
+        if usr_result :
+            
+            if check_password_hash(usr_result['password'], password):
+                session['user'] = usr_result['name']
+                return  redirect(url_for('index'))
+            else:
+                error =  'your password is incorrect.'
         else:
-            return '<h1>your password is incorrect</h1>'
+            error = 'your username is incorrect.'
 
-    return render_template('login.html', user=user)
+    return render_template('login.html', user=user, error=error)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

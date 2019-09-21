@@ -5,13 +5,13 @@
             <li><a href="{{ url_for('login') }}">Login</a></li>
             <li><a href="{{ url_for('register')}}">Register</a></li>
             {% endif %}
-            {% if user and user['admin']==0 and user['expert']==0 %}
+            {% if user and not user['admin'] and not user['expert'] %}
             <li><a href="{{ url_for('ask')}}">Ask Question</a></li>
             {% endif %}
-            {% if user and user['expert']==1%}
+            {% if user and user['expert']%}
             <li><a href="{{ url_for('unanswered')}}">Answer Questions</a></li>
             {% endif %}
-            {% if user and user['admin']==1%}
+            {% if user and user['admin']%}
             <li><a href="{{ url_for('users')}}">User Setup</a></li>
             {% endif %}
             {% if user%}
